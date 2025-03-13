@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react"
-import Image from "next/image"
 
 export default function Testimonials() {
   const testimonials = [
@@ -57,13 +54,33 @@ export default function Testimonials() {
   }, [autoplay])
 
   return (
-    <section className="py-20">
-      <div className="container px-4 md:px-6">
+    <section id="testimonials" className="py-20 relative overflow-hidden noise-overlay">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-primary/5"></div>
+      <div className="blob-bg absolute top-[20%] left-[20%]"></div>
+      <div className="blob-bg absolute bottom-[10%] right-[10%]" style={{ animationDelay: "-8s" }}></div>
+      <div className="absolute inset-0 dot-pattern"></div>
+
+      <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center text-center space-y-4 mb-12">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Client Testimonials</h2>
-          <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+          <motion.h2
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient"
+          >
+            Client Testimonials
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
+          >
             Hear what our clients have to say about working with us
-          </p>
+          </motion.p>
         </div>
 
         <div className="relative max-w-4xl mx-auto">
@@ -74,32 +91,29 @@ export default function Testimonials() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
+              className="card-hover-effect"
             >
-              <Card className="border-none shadow-lg">
-                <CardContent className="p-8 md:p-12">
-                  <div className="flex flex-col items-center text-center space-y-6">
-                    <Quote className="h-12 w-12 text-primary/20" />
+              <div className="border-none shadow-lg p-8 md:p-12 bg-white rounded-lg glass-effect">
+                <div className="flex flex-col items-center text-center space-y-6">
+                  <Quote className="h-12 w-12 text-accent/20" />
 
-                    <p className="text-lg md:text-xl italic">"{testimonials[current].quote}"</p>
+                  <p className="text-lg md:text-xl italic">"{testimonials[current].quote}"</p>
 
-                    <div className="pt-6 border-t border-border w-24 mx-auto"></div>
+                  <div className="pt-6 border-t border-border w-24 mx-auto"></div>
 
-                    <div className="flex flex-col items-center">
-                      <div className="w-16 h-16 rounded-full overflow-hidden mb-4">
-                        <Image
-                          src={testimonials[current].image || "/placeholder.svg"}
-                          alt={testimonials[current].name}
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <h4 className="font-semibold">{testimonials[current].name}</h4>
-                      <p className="text-sm text-muted-foreground">{testimonials[current].position}</p>
+                  <div className="flex flex-col items-center">
+                    <div className="w-16 h-16 rounded-full overflow-hidden mb-4">
+                      <img
+                        src={testimonials[current].image || "/placeholder.svg"}
+                        alt={testimonials[current].name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    <h4 className="font-semibold">{testimonials[current].name}</h4>
+                    <p className="text-sm text-muted-foreground">{testimonials[current].position}</p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </motion.div>
           </AnimatePresence>
 
@@ -111,16 +125,16 @@ export default function Testimonials() {
                   setCurrent(index)
                   setAutoplay(false)
                 }}
-                className={`w-3 h-3 rounded-full ${index === current ? "bg-primary" : "bg-muted"}`}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === current ? "bg-accent w-6" : "bg-muted"
+                }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
             ))}
           </div>
 
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 hidden md:flex"
+          <button
+            className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-accent hover:text-white transition-colors glass-effect"
             onClick={() => {
               prevTestimonial()
               setAutoplay(false)
@@ -128,12 +142,10 @@ export default function Testimonials() {
           >
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Previous testimonial</span>
-          </Button>
+          </button>
 
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 hidden md:flex"
+          <button
+            className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-accent hover:text-white transition-colors glass-effect"
             onClick={() => {
               nextTestimonial()
               setAutoplay(false)
@@ -141,7 +153,7 @@ export default function Testimonials() {
           >
             <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Next testimonial</span>
-          </Button>
+          </button>
         </div>
       </div>
     </section>

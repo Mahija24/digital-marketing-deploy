@@ -2,56 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 262.1 83.3% 57.8%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+}
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 262.1 83.3% 57.8%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
 }
 
 @layer base {
@@ -60,57 +53,227 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Custom clip path for hero section */
-.clip-path-polygon {
-  clip-path: polygon(100% 0, 100% 100%, 0 100%, 30% 0);
-}
-
-/* Custom animations */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
+/* Custom animations and effects */
+@layer utilities {
+  /* Text gradient effect */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
-  50% {
-    transform: translateY(-20px);
+
+  /* Heading hover effect */
+  .heading-hover {
+    @apply transition-all duration-300;
   }
-}
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
+  .heading-hover:hover {
+    @apply text-gradient scale-[1.02];
+    text-shadow: 0 0 15px rgba(var(--accent), 0.3);
   }
-  to {
-    transform: rotate(360deg);
+
+  /* Card hover effects */
+  .card-hover-effect {
+    @apply transition-all duration-300 hover:translate-y-[-5px];
   }
-}
 
-.animate-spin-slow {
-  animation: spin-slow 20s linear infinite;
-}
+  /* Card 3D effect */
+  .card-3d {
+    @apply shadow-lg transition-all duration-300 hover:shadow-xl;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
+  /* Glass effect */
+  .glass-effect {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
+  .glass-effect-dark {
+    @apply bg-gray-900/70 backdrop-blur-md border border-gray-800/30;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 5px;
-}
+  /* Button glow effect */
+  .btn-glow {
+    @apply relative overflow-hidden;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #1a365d;
+  .btn-glow::after {
+    content: "";
+    @apply absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300;
+  }
+
+  .btn-glow:hover::after {
+    @apply opacity-100;
+  }
+
+  /* Shine effect */
+  .shine {
+    @apply relative overflow-hidden;
+  }
+
+  .shine::before {
+    content: "";
+    @apply absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform skew-x-[-25deg];
+    animation: shine 3s infinite;
+  }
+
+  @keyframes shine {
+    0% {
+      left: -100%;
+    }
+    20%,
+    100% {
+      left: 100%;
+    }
+  }
+
+  /* Animated underline */
+  .animated-underline {
+    @apply relative;
+  }
+
+  .animated-underline::after {
+    content: "";
+    @apply absolute left-0 bottom-0 w-0 h-0.5 bg-accent transition-all duration-300;
+  }
+
+  .animated-underline:hover::after {
+    @apply w-full;
+  }
+
+  /* Blob animation */
+  .blob-bg {
+    @apply w-64 h-64 rounded-full mix-blend-multiply filter blur-xl opacity-70;
+    background: radial-gradient(circle, rgba(var(--accent), 0.2) 0%, rgba(var(--primary), 0.1) 100%);
+    animation: blob-animation 15s infinite alternate;
+  }
+
+  @keyframes blob-animation {
+    0% {
+      transform: translate(0, 0) scale(1);
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    50% {
+      transform: translate(20px, 20px) scale(1.1);
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+    100% {
+      transform: translate(-20px, 10px) scale(0.9);
+      border-radius: 50% 50% 20% 80% / 25% 80% 20% 75%;
+    }
+  }
+
+  /* Dot pattern - reduced transparency */
+  .dot-pattern {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .dark .dot-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  }
+
+  /* Noise overlay */
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Clip path polygon */
+  .clip-path-polygon {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 30% 100%);
+  }
+
+  /* Pulse glow animation */
+  .animate-pulse-glow {
+    animation: pulse-glow 3s infinite alternate;
+  }
+
+  @keyframes pulse-glow {
+    0% {
+      box-shadow: 0 0 5px 0 rgba(var(--accent), 0.3);
+    }
+    100% {
+      box-shadow: 0 0 20px 5px rgba(var(--accent), 0.5);
+    }
+  }
+
+  /* Spin slow animation */
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Animation delay utilities */
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* Container custom */
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  /* Section padding */
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  /* Card styling */
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-all duration-300 border border-gray-100 dark:border-gray-700;
+  }
+
+  /* Enhanced button hover effects */
+  .btn-hover-effect {
+    @apply transition-all duration-300 transform hover:scale-105 hover:shadow-lg;
+  }
+
+  /* Service card hover effect */
+  .service-card-hover {
+    @apply transition-all duration-300;
+  }
+
+  .service-card-hover:hover {
+    @apply shadow-xl border-accent/50;
+    transform: translateY(-8px) scale(1.01);
+  }
+
+  /* Footer link hover effect */
+  .footer-link-hover {
+    @apply transition-all duration-300;
+  }
+
+  .footer-link-hover:hover {
+    @apply text-accent;
+    transform: translateX(5px);
+  }
 }
 

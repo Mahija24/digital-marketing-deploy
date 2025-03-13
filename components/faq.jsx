@@ -1,11 +1,17 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { useState } from "react"
+import { ArrowRight, ChevronDown, Search } from "lucide-react"
 
 export default function Faq() {
+  const [openItem, setOpenItem] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const toggleItem = (index) => {
+    setOpenItem(openItem === index ? null : index)
+  }
+
   const faqs = [
     {
       question: "What services does your digital marketing agency offer?",
@@ -37,21 +43,58 @@ export default function Faq() {
       answer:
         "Our pricing is customized based on your specific needs, goals, and the scope of services required. We offer different packages to accommodate various budget levels, and we're transparent about costs from the beginning. During our initial consultation, we'll discuss your budget and provide a detailed proposal outlining the investment required to achieve your goals.",
     },
+    {
+      question: "Do you work with businesses in specific industries?",
+      answer:
+        "We work with businesses across various industries, including e-commerce, SaaS, healthcare, finance, education, and more. Our team has experience developing successful digital marketing strategies for diverse sectors, allowing us to understand the unique challenges and opportunities in your industry.",
+    },
+    {
+      question: "How often will I receive reports on my campaign performance?",
+      answer:
+        "We provide detailed monthly reports that track your campaign's performance against established KPIs. These reports include data analysis, insights, and recommendations for optimization. Additionally, we offer access to real-time dashboards for certain services, allowing you to monitor performance at any time.",
+    },
   ]
 
+  const filteredFaqs = searchQuery
+    ? faqs.filter(
+        (faq) =>
+          faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          faq.answer.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : faqs
+
   return (
-    <section className="py-24 bg-muted/30">
-      <div className="container px-4 md:px-6">
+    <section className="py-24 relative overflow-hidden noise-overlay">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-secondary/5"></div>
+      <div className="blob-bg absolute top-[15%] right-[15%]"></div>
+      <div className="blob-bg absolute bottom-[15%] left-[15%]" style={{ animationDelay: "-4s" }}></div>
+      <div className="absolute inset-0 dot-pattern"></div>
+
+      <div className="container px-4 md:px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 text-primary font-medium text-sm">
+          <div className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 text-accent font-medium text-sm glass-effect">
             FAQ
           </div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6 text-gradient">
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-muted-foreground">
             Find answers to common questions about our digital marketing services.
           </p>
+        </div>
+
+        <div className="max-w-3xl mx-auto mb-8">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search questions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-3 pl-12 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent glass-effect"
+            />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+          </div>
         </div>
 
         <motion.div
@@ -61,21 +104,58 @@ export default function Faq() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-lg font-medium text-left">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-base">{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <div className="space-y-4">
+            {filteredFaqs.length > 0 ? (
+              filteredFaqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden glass-effect"
+                >
+                  <button
+                    onClick={() => toggleItem(index)}
+                    className="flex justify-between items-center w-full p-4 text-left focus:outline-none"
+                  >
+                    <span className="text-lg font-medium">{faq.question}</span>
+                    <ChevronDown
+                      className={`h-5 w-5 text-accent transition-transform duration-300 ${
+                        openItem === index ? "transform rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                      openItem === index ? "max-h-96 p-4 pt-0" : "max-h-0"
+                    }`}
+                  >
+                    <p className="text-muted-foreground">{faq.answer}</p>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No questions found matching your search.</p>
+                <button onClick={() => setSearchQuery("")} className="text-accent hover:underline mt-2">
+                  Clear search
+                </button>
+              </div>
+            )}
+          </div>
         </motion.div>
 
         <div className="mt-16 text-center">
           <p className="text-muted-foreground mb-6">Still have questions? We're here to help.</p>
-          <Button className="bg-primary hover:bg-primary/90">
-            Contact Us <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <div className="flex justify-center">
+  <button className="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-md font-medium btn-glow shine flex items-center justify-center">
+    Contact Us <ArrowRight className="ml-2 h-4 w-4" />
+  </button>
+</div>
+
+
+
         </div>
       </div>
     </section>
