@@ -125,13 +125,16 @@ export default function Hero() {
             <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/10 rounded-lg"></div>
             <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-accent/10 rounded-lg"></div>
             <div className="relative rounded-xl overflow-hidden border-8 border-white shadow-2xl">
-              <Image
-                src="/placeholder.svg?height=800&width=600"
-                alt="Digital Marketing Experts"
-                width={600}
-                height={800}
-                className="w-full h-auto object-cover"
-              />
+            <video 
+  src="/video_website.mp4" 
+  autoPlay 
+  loop 
+  muted 
+  playsInline
+  className="w-full h-screen object-cover"
+>
+  Your browser does not support the video tag.
+</video>
 
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
                 <div className="text-white">
