@@ -18,18 +18,37 @@ export default function Contact() {
   const [error, setError] = useState("")
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormState((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormState((prev) => ({ ...prev, [name]: value.trimStart() }));  // ✅ Prevent leading spaces
+  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     setError("")
-
+    setIsSubmitted(false)
+    // ✅ Validate email before submitting
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formState.email)) {
+    setError("Please enter a valid email address.");
+    setIsSubmitting(false);
+    return;
+  }
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong!")
+      }
 
       setIsSubmitted(true)
       setFormState({
@@ -40,9 +59,14 @@ export default function Contact() {
         message: "",
       })
     } catch (err) {
-      setError("There was an error submitting your form. Please try again.")
-      console.error("Form submission error:", err)
-    } finally {
+      console.error("Form submission error:", err);
+      const errorMessage = err.message.includes("Failed to fetch")
+        ? "Network error. Please check your internet connection."
+        : err.message || "Failed to send message. Please try again.";
+    
+      setError(errorMessage);
+    }
+     finally {
       setIsSubmitting(false)
     }
   }
@@ -73,28 +97,22 @@ export default function Contact() {
   return (
     <section id="contact" className="py-20 relative overflow-hidden noise-overlay">
       {/* Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-muted/50 to-background"></div>
-      <div className="blob-bg absolute top-[10%] right-[20%]"></div>
-      <div className="blob-bg absolute bottom-[20%] left-[10%]" style={{ animationDelay: "-5s" }}></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-muted/50 to-background dark:from-muted/10 dark:to-background"></div>
+      <div className="blob-bg absolute top-[10%] right-[20%] dark:opacity-20"></div>
+      <div className="blob-bg absolute bottom-[20%] left-[10%] dark:opacity-20" style={{ animationDelay: "-5s" }}></div>
       <div className="absolute inset-0 dot-pattern"></div>
 
       <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center text-center space-y-4 mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl heading-hover"
-          >
-            Get In Touch
-          </motion.h2>
+        <motion.h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6 text-gradient dark:text-gradient">
+  Get in Touch
+</motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
+            className="max-w-[700px] text-muted-foreground dark:text-white/70 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
           >
             Ready to elevate your digital strategy? Contact us today.
           </motion.p>
@@ -108,7 +126,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 glass-effect dark:glass-effect-dark"
           >
-            <h3 className="text-2xl font-bold mb-6 dark:text-white heading-hover">Send Us a Message</h3>
+            <h3 className="text-2xl font-bold mb-6 dark:text-white heading-hover-gradient">Send Us a Message</h3>
             <p className="text-muted-foreground dark:text-white/70 mb-8">
               Fill out the form below and we'll get back to you as soon as possible.
             </p>
@@ -121,6 +139,9 @@ export default function Contact() {
                 <h3 className="text-xl font-semibold mb-2 dark:text-white">Message Sent!</h3>
                 <p className="text-muted-foreground dark:text-white/70">
                   Thank you for reaching out. We'll be in touch with you shortly.
+                </p>
+                <p className="text-muted-foreground dark:text-white/70 mt-2">
+                  We've sent a confirmation email to your inbox.
                 </p>
                 <button
                   className="mt-6 bg-accent hover:bg-accent/90 text-white px-6 py-2 rounded-md font-medium btn-hover-effect"
@@ -210,37 +231,29 @@ export default function Contact() {
                 </div>
 
                 <button
-                  type="submit"
-                  className="w-full bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-md font-medium flex items-center justify-center btn-hover-effect shine"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="animate-spin mr-2">
-                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                      </span>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message <Send className="ml-2 h-5 w-5" />
-                    </>
-                  )}
-                </button>
+  type="submit"
+  className={`w-full bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-md font-medium flex items-center justify-center btn-hover-effect shine ${
+    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+  }`}
+  disabled={isSubmitting}  // ✅ Prevent multiple submissions
+>
+  {isSubmitting ? (
+    <>
+      <span className="animate-spin mr-2">
+        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </span>
+      Sending...
+    </>
+  ) : (
+    <>
+      Send Message <Send className="ml-2 h-5 w-5" />
+    </>
+  )}
+</button>
+
                 {error && <p className="text-red-500 mt-2">{error}</p>}
               </form>
             )}
@@ -254,7 +267,7 @@ export default function Contact() {
             className="space-y-8"
           >
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 glass-effect dark:glass-effect-dark">
-              <h3 className="text-2xl font-bold mb-6 dark:text-white heading-hover">Contact Information</h3>
+              <h3 className="text-2xl font-bold mb-6 dark:text-white heading-hover-gradient">Contact Information</h3>
               <p className="text-muted-foreground dark:text-white/70 mb-8">
                 Reach out to us directly using the information below.
               </p>
@@ -282,7 +295,7 @@ export default function Contact() {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 dark:text-white heading-hover">Our Location</h3>
+                <h3 className="text-xl font-bold mb-2 dark:text-white heading-hover-gradient">Our Location</h3>
                 <p className="text-muted-foreground dark:text-white/70">
                   Visit us at our office to discuss your project in person.
                 </p>

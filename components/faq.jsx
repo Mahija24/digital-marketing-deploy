@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { useState } from "react"
-import { ArrowRight, ChevronDown, Search } from "lucide-react"
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { ArrowRight, ChevronDown, Search } from "lucide-react";
 
 export default function Faq() {
-  const [openItem, setOpenItem] = useState(null)
-  const [searchQuery, setSearchQuery] = useState("")
+  const [openItem, setOpenItem] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleItem = (index) => {
-    setOpenItem(openItem === index ? null : index)
-  }
+    setOpenItem(openItem === index ? null : index);
+  };
 
   const faqs = [
     {
@@ -53,37 +53,44 @@ export default function Faq() {
       answer:
         "We provide detailed monthly reports that track your campaign's performance against established KPIs. These reports include data analysis, insights, and recommendations for optimization. Additionally, we offer access to real-time dashboards for certain services, allowing you to monitor performance at any time.",
     },
-  ]
+  ];
 
   const filteredFaqs = searchQuery
     ? faqs.filter(
         (faq) =>
           faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          faq.answer.toLowerCase().includes(searchQuery.toLowerCase()),
+          faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : faqs
+    : faqs;
 
   return (
     <section className="py-24 relative overflow-hidden noise-overlay">
       {/* Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-secondary/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-secondary/5 dark:from-gray-900 dark:to-gray-800"></div>
       <div className="blob-bg absolute top-[15%] right-[15%]"></div>
       <div className="blob-bg absolute bottom-[15%] left-[15%]" style={{ animationDelay: "-4s" }}></div>
       <div className="absolute inset-0 dot-pattern"></div>
 
       <div className="container px-4 md:px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 text-accent font-medium text-sm glass-effect">
+          <div className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 text-accent font-medium text-sm glass-effect dark:bg-gray-700 dark:text-gray-300">
             FAQ
           </div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6 text-gradient">
+          <motion.h2
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient"
+          >
             Frequently Asked Questions
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            Find answers to common questions about our digital marketing services.
-          </p>
+          </motion.h2>
+          <p className="text-xl text-muted-foreground dark:text-gray-300 mt-4">
+  Find answers to common questions about our digital marketing services.
+</p>
         </div>
 
+        {/* Search Bar */}
         <div className="max-w-3xl mx-auto mb-8">
           <div className="relative">
             <input
@@ -91,12 +98,13 @@ export default function Faq() {
               placeholder="Search questions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 pl-12 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent glass-effect"
+              className="w-full px-4 py-3 pl-12 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent glass-effect dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
             />
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground dark:text-gray-400 h-5 w-5" />
           </div>
         </div>
 
+        {/* FAQ List */}
         <motion.div
           className="max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -113,11 +121,11 @@ export default function Faq() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden glass-effect"
+                  className="bg-white rounded-lg shadow-sm overflow-hidden glass-effect dark:bg-gray-800 dark:border-gray-700"
                 >
                   <button
                     onClick={() => toggleItem(index)}
-                    className="flex justify-between items-center w-full p-4 text-left focus:outline-none"
+                    className="flex justify-between items-center w-full p-4 text-left focus:outline-none dark:text-gray-100"
                   >
                     <span className="text-lg font-medium">{faq.question}</span>
                     <ChevronDown
@@ -128,37 +136,33 @@ export default function Faq() {
                   </button>
                   <div
                     className={`overflow-hidden transition-all duration-300 ${
-                      openItem === index ? "max-h-96 p-4 pt-0" : "max-h-0"
+                      openItem === index ? "max-h-96 p-4 pt-0 dark:text-gray-300" : "max-h-0"
                     }`}
                   >
-                    <p className="text-muted-foreground">{faq.answer}</p>
+                    <p>{faq.answer}</p>
                   </div>
                 </motion.div>
               ))
             ) : (
               <div className="text-center py-8">
-                <p className="text-muted-foreground">No questions found matching your search.</p>
-                <button onClick={() => setSearchQuery("")} className="text-accent hover:underline mt-2">
-                  Clear search
-                </button>
+                <p className="dark:text-gray-300">No questions found.</p>
               </div>
             )}
           </div>
         </motion.div>
 
+        {/* Contact Section */}
         <div className="mt-16 text-center">
-          <p className="text-muted-foreground mb-6">Still have questions? We're here to help.</p>
+          <p className="text-muted-foreground dark:text-gray-300 mb-6">
+            Still have questions? We're here to help.
+          </p>
           <div className="flex justify-center">
-  <button className="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-md font-medium btn-glow shine flex items-center justify-center">
-    Contact Us <ArrowRight className="ml-2 h-4 w-4" />
-  </button>
-</div>
-
-
-
+            <button className="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-md font-medium btn-glow shine flex items-center justify-center">
+              Contact Us <ArrowRight className="ml-2 h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
-

@@ -63,9 +63,9 @@ export default function Team() {
     <section className="py-24 bg-background dark:bg-primary/80" id="team">
       <div className="container px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 dark:bg-accent/20 text-accent font-medium text-sm glass-effect">
-            Our Team
-          </div>
+        <div className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 dark:bg-accent/20 text-accent dark:text-white font-medium text-sm glass-effect">
+  Our Team
+</div>
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6 text-gradient dark:text-white">
             Meet the Experts Behind Our Success
           </h2>

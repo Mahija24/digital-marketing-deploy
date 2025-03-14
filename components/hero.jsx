@@ -3,13 +3,17 @@
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, CheckCircle, Play, BarChart3 } from "lucide-react"
+import Image from "next/image"
 
 export default function Hero() {
   const [currentWord, setCurrentWord] = useState(0)
   const words = ["Marketing", "Branding", "Strategy", "Growth"]
   const textRef = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    setIsVisible(true)
+
     const interval = setInterval(() => {
       setCurrentWord((prev) => (prev + 1) % words.length)
     }, 2000)
@@ -33,20 +37,32 @@ export default function Hero() {
   }, [])
 
   // Smooth scroll function
-  const scrollToContact = () => {
+  const scrollToContact = (e) => {
+    e.preventDefault()
     const contactSection = document.getElementById("contact")
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: "smooth" })
     }
   }
 
+  const scrollToServices = (e) => {
+    e.preventDefault()
+    const servicesSection = document.getElementById("services")
+    if (servicesSection) {
+      servicesSection.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background dark:bg-primary/90 noise-overlay">
+    <section
+      id="hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background dark:bg-gray-900 noise-overlay"
+    >
       {/* Background elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-accent/10 dark:to-secondary/10"></div>
         <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 dark:bg-accent/5 clip-path-polygon"></div>
-        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-background dark:from-primary/90 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-background dark:from-gray-900 to-transparent"></div>
 
         {/* Blob backgrounds */}
         <div className="blob-bg absolute top-[10%] left-[20%] dark:opacity-20"></div>
@@ -164,21 +180,26 @@ export default function Hero() {
       <div className="container relative z-10 px-4 md:px-6 grid md:grid-cols-2 gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           transition={{ duration: 0.8 }}
-          className="text-left"
+          className="text-left relative"
         >
+          {/* Decorative elements behind text */}
+          <div className="absolute -top-16 -left-16 w-32 h-32 bg-primary/10 dark:bg-primary/20 rounded-full blur-xl"></div>
+          <div className="absolute top-1/2 -left-24 w-48 h-48 bg-accent/10 dark:bg-accent/20 rotate-45 blur-xl"></div>
+          <div className="absolute bottom-0 left-1/3 w-24 h-24 bg-yellow-500/10 dark:bg-yellow-500/20 rounded-lg blur-lg"></div>
+
           <motion.div
             initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -20 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 dark:bg-accent/20 text-accent font-medium text-sm animate-pulse-glow glass-effect"
+            className="inline-block px-4 py-1 mb-6 rounded-full bg-primary/10 dark:bg-accent/20 text-accent font-medium text-sm animate-pulse-glow glass-effect relative z-10"
           >
             #1 Digital Marketing Agency
           </motion.div>
 
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 text-foreground dark:text-white">
-            Elevate Your{" "}
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 text-foreground dark:text-white relative z-10">
+            <span className="heading-hover-gradient block">Elevate Your</span>{" "}
             <span className="text-accent relative">
               <motion.span
                 key={currentWord}
@@ -186,7 +207,7 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-                className="inline-block"
+                className="inline-block heading-hover-gradient"
                 ref={textRef}
               >
                 {words[currentWord]}
@@ -197,9 +218,9 @@ export default function Hero() {
 
           <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: isVisible ? 1 : 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-xl text-muted-foreground dark:text-white/80 max-w-[600px] mb-8"
+            className="text-xl text-muted-foreground dark:text-white/80 max-w-[600px] mb-8 relative z-10"
           >
             We help ambitious businesses like yours generate more profits by building awareness, driving web traffic,
             connecting with customers, and growing overall sales.
@@ -207,30 +228,32 @@ export default function Hero() {
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="flex flex-wrap gap-4 mb-8"
+            className="flex flex-wrap gap-4 mb-8 relative z-10"
           >
-            <button
+            <a
+              href="#contact"
               onClick={scrollToContact}
               className="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-md font-medium text-lg flex items-center btn-glow shine"
             >
               Get Started <ArrowRight className="ml-2 h-5 w-5" />
-            </button>
+            </a>
 
-            <button
-              onClick={scrollToContact}
+            <a
+              href="#services"
+              onClick={scrollToServices}
               className="border border-primary dark:border-white/20 text-primary dark:text-white hover:bg-primary/10 dark:hover:bg-white/10 px-6 py-3 rounded-md font-medium text-lg flex items-center glass-effect"
             >
-              <Play className="mr-2 h-5 w-5 fill-accent text-accent" /> Watch Demo
-            </button>
+              <Play className="mr-2 h-5 w-5 fill-accent text-accent" /> Our Services
+            </a>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: isVisible ? 1 : 0 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-muted-foreground dark:text-white/70"
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-muted-foreground dark:text-white/70 relative z-10"
           >
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-accent" />
@@ -251,7 +274,7 @@ export default function Hero() {
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.9 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative hidden md:block"
         >
@@ -261,14 +284,16 @@ export default function Hero() {
             <div className="relative rounded-xl overflow-hidden border-8 border-white dark:border-white/10 shadow-2xl dark:shadow-accent/20 animate-pulse-glow card-3d">
             <video 
   src="/video_website.mp4" 
-  autoPlay 
-  loop 
-  muted 
-  playsInline
-  className="w-full h-screen object-cover"
+  className="w-full h-[550px] object-cover"
+  autoPlay
+  loop
+  muted
 >
   Your browser does not support the video tag.
 </video>
+
+
+
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
                 <div className="text-white">
                   <h3 className="text-xl font-bold">Trusted by Industry Leaders</h3>
@@ -279,9 +304,9 @@ export default function Hero() {
           </div>
 
           <motion.div
-            className="absolute -bottom-8 -left-8 bg-white dark:bg-primary/80 rounded-lg shadow-lg p-4 flex items-center gap-4 glass-effect"
+            className="absolute -bottom-8 -left-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 flex items-center gap-4 glass-effect"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
             transition={{ duration: 0.5, delay: 0.8 }}
           >
             <div className="bg-accent/10 dark:bg-accent/20 rounded-full p-3">

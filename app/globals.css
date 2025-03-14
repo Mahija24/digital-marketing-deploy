@@ -74,6 +74,17 @@
     text-shadow: 0 0 15px rgba(var(--accent), 0.3);
   }
 
+  /* New heading hover gradient effect */
+  .heading-hover-gradient {
+    @apply transition-all duration-500 relative;
+    color: rgba(var(--foreground), 0.7);
+  }
+
+  .heading-hover-gradient:hover {
+    color: rgba(var(--foreground), 1);
+    text-shadow: 0 0 10px rgba(var(--primary), 0.3);
+  }
+
   /* Card hover effects */
   .card-hover-effect {
     @apply transition-all duration-300 hover:translate-y-[-5px];
@@ -92,8 +103,9 @@
   }
 
   .glass-effect-dark {
-    @apply bg-gray-900/70 backdrop-blur-md border border-gray-800/30;
+    @apply bg-background backdrop-blur-md border border-gray-800/30;
   }
+  
 
   /* Button glow effect */
   .btn-glow {
@@ -234,6 +246,33 @@
 
   .animation-delay-4000 {
     animation-delay: 4s;
+  }
+
+  /* Marquee animations */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes marquee-reverse {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+
+  .animate-marquee-reverse {
+    animation: marquee-reverse 30s linear infinite;
   }
 
   /* Container custom */

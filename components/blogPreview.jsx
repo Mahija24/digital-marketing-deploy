@@ -58,7 +58,6 @@ export default function BlogPreview() {
     },
   }
 
-  // Smooth scroll function
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId)
     if (section) {
@@ -67,29 +66,28 @@ export default function BlogPreview() {
   }
 
   return (
-    <section id="blog" className="py-20 relative overflow-hidden noise-overlay">
+    <section id="blog" className="py-20 relative overflow-hidden noise-overlay bg-white dark:bg-gray-900">
       {/* Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-accent/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-accent/5 dark:from-gray-800 dark:to-gray-950"></div>
       <div className="blob-bg absolute top-[20%] left-[10%]"></div>
       <div className="blob-bg absolute bottom-[10%] right-[20%]" style={{ animationDelay: "-6s" }}></div>
-      
 
       <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <div>
-            <div className="inline-block px-4 py-1 mb-4 rounded-full bg-primary/10 text-accent font-medium text-sm glass-effect">
+            <div className="inline-block px-4 py-1 mb-4 rounded-full bg-primary/10 text-accent font-medium text-sm glass-effect dark:bg-primary/20 dark:text-white">
               Latest Insights
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient relative -top-2">
               Marketing Blog
             </h2>
-            <p className="text-xl text-muted-foreground mt-4 max-w-2xl">
+            <p className="text-xl text-gray-700 dark:text-gray-300 mt-4 max-w-2xl">
               Expert tips, industry insights, and the latest trends in digital marketing.
             </p>
           </div>
           <div className="mt-6 md:mt-0">
             <button
-              className="inline-flex items-center text-accent font-medium hover:underline animated-underline"
+              className="inline-flex items-center text-accent dark:text-blue-400 font-medium hover:underline animated-underline"
               onClick={() => scrollToSection("contact")}
             >
               View All Articles <ArrowRight className="ml-2 h-4 w-4" />
@@ -106,23 +104,23 @@ export default function BlogPreview() {
         >
           {blogPosts.map((post, index) => (
             <motion.div key={post.id} variants={itemVariants} className="card-hover-effect">
-              <div className="bg-white rounded-lg overflow-hidden shadow-md glass-effect">
+              <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md glass-effect">
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={post.image || "/placeholder.svg"}
                     alt={post.title}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                   />
-                  <div className="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-xs font-medium">
+                  <div className="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-xs font-medium dark:bg-blue-500">
                     {post.category}
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 line-clamp-2 hover:text-accent transition-colors">
+                  <h3 className="text-xl font-bold mb-2 line-clamp-2 hover:text-accent transition-colors dark:hover:text-blue-400">
                     <button onClick={() => scrollToSection("contact")}>{post.title}</button>
                   </h3>
-                  <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
-                  <div className="flex items-center text-sm text-muted-foreground mb-4">
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">{post.excerpt}</p>
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-4">
                     <User className="h-4 w-4 mr-1" />
                     <span className="mr-4">{post.author}</span>
                     <Calendar className="h-4 w-4 mr-1" />
@@ -131,7 +129,7 @@ export default function BlogPreview() {
                     <span>{post.readTime}</span>
                   </div>
                   <button
-                    className="inline-flex items-center text-accent font-medium hover:underline animated-underline"
+                    className="inline-flex items-center text-accent dark:text-blue-400 font-medium hover:underline animated-underline"
                     onClick={() => scrollToSection("contact")}
                   >
                     Read More <ArrowRight className="ml-1 h-4 w-4" />
@@ -145,4 +143,3 @@ export default function BlogPreview() {
     </section>
   )
 }
-
